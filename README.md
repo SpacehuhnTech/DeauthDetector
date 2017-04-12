@@ -13,6 +13,8 @@ So this is a good and cheap way to detect a [Wi-Fi deauthentication attack](http
 
 ## How to install it  
 
+**You will only need to follow one of the installation methods!**
+
 ### Uploading the .bin file
 
 Upload the `deauth_detector.bin` using the [nodemcu-flasher](https://github.com/nodemcu/nodemcu-flasher) or the [esptool](https://github.com/espressif/esptool) from Espressif.

@@ -1,9 +1,13 @@
 # DeauthDetector
 Detect deauthentication frames using an ESP8266
 
+![esp8266 deauth detector custom build](https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/device.jpg)
+
 ## How it works  
 
 If the ESP8266 detects [deauthentication or disassociation frames](https://mrncciew.com/2014/10/11/802-11-mgmt-deauth-disassociation-frames/) it will turn on its LED. That's all ¯\ (ツ)/¯.  
+
+![blinky esp8266 deauth detector](https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/blink.jpg)
 
 So this is a good and cheap way to detect a [Wi-Fi deauthentication attack](https://en.wikipedia.org/wiki/Wi-Fi_deauthentication_attack).  
 

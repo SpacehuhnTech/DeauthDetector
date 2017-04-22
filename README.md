@@ -3,6 +3,8 @@ Detect deauthentication frames using an ESP8266
 
 ![esp8266 deauth detector custom build](https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/device.jpg)
 
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RCHANSVSX9M8C)  
+
 ## How it works  
 
 If the ESP8266 detects [deauthentication or disassociation frames](https://mrncciew.com/2014/10/11/802-11-mgmt-deauth-disassociation-frames/) it will turn on its LED. That's all ¯\ (ツ)/¯.  

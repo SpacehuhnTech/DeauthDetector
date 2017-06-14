@@ -3,9 +3,8 @@ Detect deauthentication frames using an ESP8266
 
 ![esp8266 deauth detector custom build](https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/device.jpg)
 
-[**Support me and my projects on Patreon!**  
-<img width="450" alt="Support me on Patreon" src="https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/patreon.png">](https://www.patreon.com/spacehuhn)  
-
+**Support me and my projects on [Patreon!](https://www.patreon.com/spacehuhn)**  
+[<img width="200" alt="Support me on Patreon" src="https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/patreon.png">](https://www.patreon.com/spacehuhn)  
 
 
 ## How it works  

@@ -6,6 +6,15 @@ Mac::Mac(){
   }
 }
 
+Mac::Mac(uint8_t first, uint8_t second, uint8_t third, uint8_t fourth, uint8_t fifth, uint8_t sixth){
+  adress[0] = first;
+  adress[1] = second;
+  adress[2] = third;
+  adress[3] = fourth;
+  adress[4] = fifth;
+  adress[5] = sixth;
+}
+
 void Mac::set(uint8_t first, uint8_t second, uint8_t third, uint8_t fourth, uint8_t fifth, uint8_t sixth){
   adress[0] = first;
   adress[1] = second;

@@ -7,6 +7,8 @@ class Mac
 {
   public:
     Mac();
+    Mac(uint8_t first, uint8_t second, uint8_t third, uint8_t fourth, uint8_t fifth, uint8_t sixth);
+    
     void set(uint8_t first, uint8_t second, uint8_t third, uint8_t fourth, uint8_t fifth, uint8_t sixth);
     void setAt(uint8_t first, int num);
     void setMac(Mac adr);
@@ -16,6 +18,7 @@ class Mac
     uint8_t _get(int num);
     bool compare(Mac target);
     bool valid();
+
   private:
     uint8_t adress[6];
 };

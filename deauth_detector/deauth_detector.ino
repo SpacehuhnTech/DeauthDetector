@@ -46,7 +46,8 @@ void setup() {
 
   wifi_set_opmode(STATION_MODE);
   wifi_promiscuous_enable(0);
-  WiFi.disconnect();
+  WiFi.persistent(false);
+  WiFi.disconnect(true);
   wifi_set_promiscuous_rx_cb(sniffer);
   wifi_set_channel(curChannel);
   wifi_promiscuous_enable(1);

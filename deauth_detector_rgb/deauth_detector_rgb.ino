@@ -3,7 +3,7 @@
 // For more details visit github.com/spacehuhn/DeauthDetector
 
 // include necessary libraries
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>       // For the WiFi Sniffer
 
 // include ESP8266 Non-OS SDK functions
 extern "C" {
@@ -11,8 +11,9 @@ extern "C" {
 }
 
 // ===== SETTINGS ===== //
-#define LED 2              /* LED pin (2=built-in LED) */
-#define LED_INVERT true    /* Invert HIGH/LOW for LED */
+#define LED_R 14           /* Red LED pin */
+#define LED_G 12           /* Green LED pin */
+#define LED_B 4            /* Blue LED pin */
 #define SERIAL_BAUD 115200 /* Baudrate for serial communication */
 #define CH_TIME 140        /* Scan time (in ms) per channel */
 #define PKT_RATE 5         /* Min. packets before it gets recognized as an attack */
@@ -44,21 +45,28 @@ void sniffer(uint8_t *buf, uint16_t len) {
 
 // ===== Attack detection functions ===== //
 void attack_started() {
-  digitalWrite(LED, !LED_INVERT); // turn LED on
+  analogWrite(LED_R, 100);
+  analogWrite(LED_G, 0);
+  analogWrite(LED_B, 0);
   Serial.println("ATTACK DETECTED");
 }
 
 void attack_stopped() {
-  digitalWrite(LED, LED_INVERT); // turn LED off
+  analogWrite(LED_R, 0);
+  analogWrite(LED_G, 0);
+  analogWrite(LED_B, 0);
   Serial.println("ATTACK STOPPED");
 }
 
 // ===== Setup ===== //
 void setup() {
   Serial.begin(SERIAL_BAUD); // Start serial communication
-
-  pinMode(LED, OUTPUT); // Enable LED pin
-  digitalWrite(LED, LED_INVERT);
+  
+  // Init LEDs
+  analogWriteRange(255);
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
 
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
   wifi_set_opmode(STATION_MODE);       // Set device to client/station mode

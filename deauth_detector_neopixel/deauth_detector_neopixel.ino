@@ -3,7 +3,8 @@
 // For more details visit github.com/spacehuhn/DeauthDetector
 
 // include necessary libraries
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>       // For the WiFi Sniffer
+#include <Adafruit_NeoPixel.h> // For the Neopixel/WS2812 LED(s)
 
 // include ESP8266 Non-OS SDK functions
 extern "C" {
@@ -11,8 +12,8 @@ extern "C" {
 }
 
 // ===== SETTINGS ===== //
-#define LED 2              /* LED pin (2=built-in LED) */
-#define LED_INVERT true    /* Invert HIGH/LOW for LED */
+#define LED 4              /* LED pin */
+#define LED_NUM 1          /* Number of LEDs */
 #define SERIAL_BAUD 115200 /* Baudrate for serial communication */
 #define CH_TIME 140        /* Scan time (in ms) per channel */
 #define PKT_RATE 5         /* Min. packets before it gets recognized as an attack */
@@ -22,6 +23,7 @@ extern "C" {
 const short channels[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ }; 
 
 // ===== Runtime variables ===== //
+Adafruit_NeoPixel pixels { LED_NUM, LED, NEO_GRB + NEO_KHZ800 }; // Neopixel LEDs
 int ch_index { 0 };               // Current index of channel array
 int packet_rate { 0 };            // Deauth packet counter (resets with each update)
 int attack_counter { 0 };         // Attack counter
@@ -44,12 +46,16 @@ void sniffer(uint8_t *buf, uint16_t len) {
 
 // ===== Attack detection functions ===== //
 void attack_started() {
-  digitalWrite(LED, !LED_INVERT); // turn LED on
+  for(int i=0; i<LED_NUM; ++i)
+    pixels.setPixelColor(i, pixels.Color(120,0,0));
+  pixels.show();
   Serial.println("ATTACK DETECTED");
 }
 
 void attack_stopped() {
-  digitalWrite(LED, LED_INVERT); // turn LED off
+  for(int i=0; i<LED_NUM; ++i)
+    pixels.setPixelColor(i, pixels.Color(0,0,0));
+  pixels.show();
   Serial.println("ATTACK STOPPED");
 }
 
@@ -57,8 +63,11 @@ void attack_stopped() {
 void setup() {
   Serial.begin(SERIAL_BAUD); // Start serial communication
 
-  pinMode(LED, OUTPUT); // Enable LED pin
-  digitalWrite(LED, LED_INVERT);
+  // Init LEDs
+  pixels.begin(); 
+  for(int i=0; i<LED_NUM; ++i) 
+    pixels.setPixelColor(i, pixels.Color(0,0,0));
+  pixels.show();
 
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
   wifi_set_opmode(STATION_MODE);       // Set device to client/station mode

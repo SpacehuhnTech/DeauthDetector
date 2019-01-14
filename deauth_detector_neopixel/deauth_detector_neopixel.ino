@@ -20,7 +20,7 @@ extern "C" {
 #define PKT_TIME 1         /* Min. interval (CH_TIME*CH_RANGE) before it gets recognized as an attack */
 
 // Channels to scan on (US=1-11, EU=1-13, JAP=1-14)
-const short channels[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ }; 
+const short channels[] = { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ };
 
 // ===== Runtime variables ===== //
 Adafruit_NeoPixel pixels { LED_NUM, LED, NEO_GRB + NEO_KHZ800 }; // Neopixel LEDs
@@ -32,7 +32,7 @@ unsigned long ch_time { 0 };      // Last channel hop time
 
 // ===== Sniffer function ===== //
 void sniffer(uint8_t *buf, uint16_t len) {
-  if (len < 28) return; // Drop packets without MAC header
+  if (!buffer || len < 28) return; // Drop packets without MAC header
 
   byte pkt_type = buf[12]; // second half of frame control field
   //byte* addr_a = &buf[16]; // first MAC address
@@ -64,8 +64,8 @@ void setup() {
   Serial.begin(SERIAL_BAUD); // Start serial communication
 
   // Init LEDs
-  pixels.begin(); 
-  for(int i=0; i<LED_NUM; ++i) 
+  pixels.begin();
+  for(int i=0; i<LED_NUM; ++i)
     pixels.setPixelColor(i, pixels.Color(0,0,0));
   pixels.show();
 
@@ -85,7 +85,7 @@ void loop() {
   // Update each second (or scan-time-per-channel * channel-range)
   if (current_time - update_time >= (sizeof(channels)*CH_TIME)) {
     update_time = current_time; // Update time variable
-    
+
     // When detected deauth packets exceed the minimum allowed number
     if (packet_rate >= PKT_RATE) {
       ++attack_counter; // Increment attack counter
@@ -97,11 +97,11 @@ void loop() {
     // When attack exceeds minimum allowed time
     if (attack_counter == PKT_TIME) {
       attack_started();
-    } 
+    }
 
     Serial.print("Packets/s: ");
     Serial.println(packet_rate);
-    
+
     packet_rate = 0; // Reset packet rate
   }
 
@@ -110,14 +110,13 @@ void loop() {
     ch_time = current_time; // Update time variable
 
     // Get next channel
-    ++ch_index;
-    if(ch_index >= sizeof(channels)/sizeof(channels[0])) ch_index = 0;
+    ch_index = (ch_index+1) % (sizeof(channels)/sizeof(channels[0]));
     short ch = channels[ch_index];
 
     // Set channel
     //Serial.print("Set channel to ");
     //Serial.println(ch);
-    wifi_set_channel(ch); 
+    wifi_set_channel(ch);
   }
 
 }

@@ -22,7 +22,7 @@ extern "C" {
 #define PKT_TIME 1         /* Min. interval (CH_TIME*CH_RANGE) before it gets recognized as an attack */
 
 // Channels to scan on (US=1-11, EU=1-13, JAP=1-14)
-const short channels[] { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ }; 
+const short channels[] { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ };
 
 // ===== Runtime variables ===== //
 Adafruit_NeoPixel pixels { LED_NUM, LED, NEO_GRB + NEO_KHZ800 }; // Neopixel LEDs
@@ -54,43 +54,43 @@ unsigned long song_time { 0 };    // Last song update
 #define NOTE_B5  988
 
 int notes[] {
-   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0, 
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
+   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0,
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
    NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, 0,
    NOTE_A4, NOTE_G4, NOTE_A4, 0,
-   
-   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0, 
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
+
+   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0,
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
    NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, 0,
    NOTE_A4, NOTE_G4, NOTE_A4, 0,
-   
-   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0, 
-   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, 0, 
+
+   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0,
+   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, 0,
    NOTE_D5, NOTE_E5, NOTE_F5, NOTE_F5, 0,
    NOTE_E5, NOTE_D5, NOTE_E5, NOTE_A4, 0,
-   
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
-   NOTE_D5, NOTE_E5, NOTE_A4, 0, 
+
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
+   NOTE_D5, NOTE_E5, NOTE_A4, 0,
    NOTE_A4, NOTE_C5, NOTE_B4, NOTE_B4, 0,
    NOTE_C5, NOTE_A4, NOTE_B4, 0,
 
-   NOTE_A4, NOTE_A4, 
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
+   NOTE_A4, NOTE_A4,
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
    NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, 0,
    NOTE_A4, NOTE_G4, NOTE_A4, 0,
 
-   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0, 
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
+   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0,
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
    NOTE_C5, NOTE_D5, NOTE_B4, NOTE_B4, 0,
    NOTE_A4, NOTE_G4, NOTE_A4, 0,
-   
-   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0, 
-   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, 0, 
+
+   NOTE_E4, NOTE_G4, NOTE_A4, NOTE_A4, 0,
+   NOTE_A4, NOTE_C5, NOTE_D5, NOTE_D5, 0,
    NOTE_D5, NOTE_E5, NOTE_F5, NOTE_F5, 0,
    NOTE_E5, NOTE_D5, NOTE_E5, NOTE_A4, 0,
-   
-   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0, 
-   NOTE_D5, NOTE_E5, NOTE_A4, 0, 
+
+   NOTE_A4, NOTE_B4, NOTE_C5, NOTE_C5, 0,
+   NOTE_D5, NOTE_E5, NOTE_A4, 0,
    NOTE_A4, NOTE_C5, NOTE_B4, NOTE_B4, 0,
    NOTE_C5, NOTE_A4, NOTE_B4, 0,
 
@@ -106,46 +106,46 @@ int notes[] {
 };
 
 int duration[] {
-  125, 125, 250, 125, 125, 
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
-  125, 125, 375, 125, 
-  
-  125, 125, 250, 125, 125, 
+  125, 125, 250, 125, 125,
+  125, 125, 375, 125,
+
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
-  125, 125, 375, 125, 
-  
-  125, 125, 250, 125, 125, 
+  125, 125, 250, 125, 125,
+  125, 125, 375, 125,
+
+  125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
   125, 125, 125, 250, 125,
 
-  125, 125, 250, 125, 125, 
-  250, 125, 250, 125, 
+  125, 125, 250, 125, 125,
+  250, 125, 250, 125,
   125, 125, 250, 125, 125,
   125, 125, 375, 375,
 
   250, 125,
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
-  125, 125, 375, 125, 
-  
-  125, 125, 250, 125, 125, 
+  125, 125, 375, 125,
+
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
-  125, 125, 375, 125, 
-  
-  125, 125, 250, 125, 125, 
+  125, 125, 250, 125, 125,
+  125, 125, 375, 125,
+
+  125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
   125, 125, 250, 125, 125,
   125, 125, 125, 250, 125,
 
-  125, 125, 250, 125, 125, 
-  250, 125, 250, 125, 
+  125, 125, 250, 125, 125,
+  250, 125, 250, 125,
   125, 125, 250, 125, 125,
   125, 125, 375, 375,
-  
+
   250, 125, 375, 250, 125, 375,
   125, 125, 125, 125, 125, 125, 125, 125, 375,
   250, 125, 375, 250, 125, 375,
@@ -159,7 +159,7 @@ int duration[] {
 
 // ===== Sniffer function ===== //
 void sniffer(uint8_t *buf, uint16_t len) {
-  if (len < 28) return; // Drop packets without MAC header
+  if (!buffer || len < 28) return; // Drop packets without MAC header
 
   byte pkt_type = buf[12]; // second half of frame control field
   //byte* addr_a = &buf[16]; // first MAC address
@@ -180,7 +180,7 @@ void attack_started() {
   for(int i=0; i<LED_NUM; ++i)
     pixels.setPixelColor(i, pixels.Color(120,0,0));
   pixels.show();
-  
+
   Serial.println("ATTACK DETECTED");
 }
 
@@ -191,7 +191,7 @@ void attack_stopped() {
   for(int i=0; i<LED_NUM; ++i)
     pixels.setPixelColor(i, pixels.Color(0,0,0));
   pixels.show();
-  
+
   Serial.println("ATTACK STOPPED");
 }
 
@@ -200,13 +200,13 @@ void setup() {
   Serial.begin(SERIAL_BAUD); // Start serial communication
 
   // Init LEDs
-  pixels.begin(); 
-  for(int i=0; i<LED_NUM; ++i) 
+  pixels.begin();
+  for(int i=0; i<LED_NUM; ++i)
     pixels.setPixelColor(i, pixels.Color(0,0,0));
   pixels.show();
-  
+
   pinMode(BUZZER, OUTPUT); // Init buzzer pin
-  
+
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
   wifi_set_opmode(STATION_MODE);       // Set device to client/station mode
   wifi_set_promiscuous_rx_cb(sniffer); // Set sniffer function
@@ -223,7 +223,7 @@ void loop() {
   // Update each second (or scan-time-per-channel * channel-range)
   if (current_time - update_time >= (sizeof(channels)*CH_TIME)) {
     update_time = current_time; // Update time variable
-    
+
     // When detected deauth packets exceed the minimum allowed number
     if (packet_rate >= PKT_RATE) {
       ++attack_counter; // Increment attack counter
@@ -235,11 +235,11 @@ void loop() {
     // When attack exceeds minimum allowed time
     if (attack_counter == PKT_TIME) {
       attack_started();
-    } 
+    }
 
     Serial.print("Packets/s: ");
     Serial.println(packet_rate);
-    
+
     packet_rate = 0; // Reset packet rate
   }
 
@@ -248,24 +248,21 @@ void loop() {
     ch_time = current_time; // Update time variable
 
     // Get next channel
-    ++ch_index;
-    if(ch_index >= sizeof(channels)/sizeof(channels[0])) ch_index = 0;
+    ch_index = (ch_index+1) % (sizeof(channels)/sizeof(channels[0]));
     short ch = channels[ch_index];
 
     // Set channel
     //Serial.print("Set channel to ");
     //Serial.println(ch);
-    wifi_set_channel(ch); 
+    wifi_set_channel(ch);
   }
 
   if(song_playing && current_time - song_time >= note_time) {
     song_time = current_time;
-    
-    ++note_index;
-    if(note_index >= sizeof(notes)/sizeof(notes[0])) note_index = 0;
 
+    note_index = (note_index+1) % (sizeof(notes)/sizeof(notes[0]));
     note_time = duration[note_index] * SPEED;
-    
+
     tone(BUZZER, notes[note_index], note_time);
   }
 

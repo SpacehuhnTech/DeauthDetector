@@ -32,7 +32,7 @@ unsigned long ch_time { 0 };      // Last channel hop time
 
 // ===== Sniffer function ===== //
 void sniffer(uint8_t *buf, uint16_t len) {
-  if (!buffer || len < 28) return; // Drop packets without MAC header
+  if (!buf || len < 28) return; // Drop packets without MAC header
 
   byte pkt_type = buf[12]; // second half of frame control field
   //byte* addr_a = &buf[16]; // first MAC address

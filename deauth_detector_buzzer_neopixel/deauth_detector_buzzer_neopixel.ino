@@ -189,7 +189,7 @@ void attack_stopped() {
   noTone(BUZZER); // Stop playing
 
   for(int i=0; i<LED_NUM; ++i)
-    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
   pixels.show();
 
   Serial.println("ATTACK STOPPED");
@@ -202,7 +202,7 @@ void setup() {
   // Init LEDs
   pixels.begin();
   for(int i=0; i<LED_NUM; ++i)
-    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
   pixels.show();
 
   pinMode(BUZZER, OUTPUT); // Init buzzer pin
@@ -210,7 +210,7 @@ void setup() {
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
   wifi_set_opmode(STATION_MODE);       // Set device to client/station mode
   wifi_set_promiscuous_rx_cb(sniffer); // Set sniffer function
-  wifi_set_channel(channels[0]);        // Set channel
+  wifi_set_channel(channels[0]);       // Set channel
   wifi_promiscuous_enable(true);       // Enable sniffer
 
   Serial.println("Started \\o/");

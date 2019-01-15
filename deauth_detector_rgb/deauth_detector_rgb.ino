@@ -45,7 +45,7 @@ void sniffer(uint8_t *buf, uint16_t len) {
 
 // ===== Attack detection functions ===== //
 void attack_started() {
-  analogWrite(LED_R, 100);
+  analogWrite(LED_R, 120);
   analogWrite(LED_G, 0);
   analogWrite(LED_B, 0);
   Serial.println("ATTACK DETECTED");
@@ -53,7 +53,7 @@ void attack_started() {
 
 void attack_stopped() {
   analogWrite(LED_R, 0);
-  analogWrite(LED_G, 0);
+  analogWrite(LED_G, 100);
   analogWrite(LED_B, 0);
   Serial.println("ATTACK STOPPED");
 }
@@ -67,6 +67,10 @@ void setup() {
   pinMode(LED_R, OUTPUT);
   pinMode(LED_G, OUTPUT);
   pinMode(LED_B, OUTPUT);
+
+  analogWrite(LED_R, 0);
+  analogWrite(LED_G, 100);
+  analogWrite(LED_B, 0);
 
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
   wifi_set_opmode(STATION_MODE);       // Set device to client/station mode

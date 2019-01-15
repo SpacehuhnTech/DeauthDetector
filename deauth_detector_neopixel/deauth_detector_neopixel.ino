@@ -54,7 +54,7 @@ void attack_started() {
 
 void attack_stopped() {
   for(int i=0; i<LED_NUM; ++i)
-    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
   pixels.show();
   Serial.println("ATTACK STOPPED");
 }
@@ -66,7 +66,7 @@ void setup() {
   // Init LEDs
   pixels.begin();
   for(int i=0; i<LED_NUM; ++i)
-    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
   pixels.show();
 
   WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections

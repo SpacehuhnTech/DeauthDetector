@@ -3,6 +3,12 @@ Detect deauthentication frames using an ESP8266
 
 ![esp8266 deauth detector custom build](https://raw.githubusercontent.com/spacehuhn/DeauthDetector/master/images/device.jpg)
 
+## Buy
+
+[Maltronics](https://maltronics.com/) is selling a Deauth Detector based on this project:  
+
+🛒 https://maltronics.com/products/deauth-detector
+
 ## Support us
 
 Hey, do you like this kind of project?  

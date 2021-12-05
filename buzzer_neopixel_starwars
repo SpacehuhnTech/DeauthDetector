@@ -1,0 +1,232 @@
+// This software is licensed under the MIT License.
+// See the license file for details.
+// For more details visit github.com/spacehuhn/DeauthDetector
+// Tweaked to sing Star Wars (Imperial March) by poison-ivy-3v3.
+
+// include necessary libraries
+#include <ESP8266WiFi.h>       // For the WiFi Sniffer
+#include <Adafruit_NeoPixel.h> // For the Neopixel/WS2812 LED(s)
+
+// include ESP8266 Non-OS SDK functions
+extern "C" {
+#include "user_interface.h"
+}
+
+// ===== SETTINGS ===== //
+#define LED 4              /* LED pin */
+#define LED_NUM 1          /* Number of LEDs */
+#define BUZZER 5           /* Buzzer pin */
+#define SPEED 1.5          /* Song speed, the bigger the number the slower the song */
+#define SERIAL_BAUD 115200 /* Baudrate for serial communication */
+#define CH_TIME 140        /* Scan time (in ms) per channel */
+#define PKT_RATE 5         /* Min. packets before it gets recognized as an attack */
+#define PKT_TIME 1         /* Min. interval (CH_TIME*CH_RANGE) before it gets recognized as an attack */
+
+// Channels to scan on (US=1-11, EU=1-13, JAP=1-14)
+const short channels[] { 1,2,3,4,5,6,7,8,9,10,11,12,13/*,14*/ };
+
+// ===== Runtime variables ===== //
+Adafruit_NeoPixel pixels { LED_NUM, LED, NEO_GRB + NEO_KHZ800 }; // Neopixel LEDs
+bool song_playing { false };      // If a song is currently playing
+int note_index { 0 };             // Index of note that is currently playing
+int note_time { 0 };              // The amount of time (ms) a note is played
+int ch_index { 0 };               // Current index of channel array
+int packet_rate { 0 };            // Deauth packet counter (resets with each update)
+int attack_counter { 0 };         // Attack counter
+unsigned long update_time { 0 };  // Last update time
+unsigned long ch_time { 0 };      // Last channel hop time
+unsigned long song_time { 0 };    // Last song update
+
+// ===== Notes ===== //
+// Compiled by poison-ivy-3v3 like a boss, Imperial March from Star Wars //
+#define NOTE_c  261
+#define NOTE_d  294
+#define NOTE_e  329
+#define NOTE_f  349
+#define NOTE_g  391
+#define NOTE_gS  415
+#define NOTE_a  440
+#define NOTE_aS  455
+#define NOTE_b  466
+#define NOTE_cH  523
+#define NOTE_cSH  554
+#define NOTE_dH  587
+#define NOTE_dSH  622
+#define NOTE_eH  659
+#define NOTE_fH  698
+#define NOTE_fSH  740
+#define NOTE_gH  784
+#define NOTE_gSH  830
+#define NOTE_aH  880
+
+int notes[] {
+  NOTE_a, NOTE_a, NOTE_a, NOTE_f, NOTE_cH,
+   
+  NOTE_a, NOTE_f, NOTE_cH, NOTE_a, 0,
+  
+  NOTE_eH, NOTE_eH, NOTE_eH, NOTE_fH, NOTE_cH,
+  
+  NOTE_gS, NOTE_f, NOTE_cH, NOTE_a, 0,
+
+
+  NOTE_aH, NOTE_a, NOTE_aH, NOTE_gSH, NOTE_gH,
+
+  NOTE_fSH, NOTE_fH, NOTE_fSH, 0,
+
+  
+  NOTE_aS, NOTE_dSH, NOTE_cSH, NOTE_cH, NOTE_b,
+  NOTE_cH, 0,
+
+  
+  NOTE_f, NOTE_gS, NOTE_f, NOTE_a, NOTE_cH,
+  NOTE_a, NOTE_cH, NOTE_eH, 0,
+
+  
+  NOTE_aH, NOTE_a, NOTE_aH, NOTE_gSH, NOTE_gH,
+  NOTE_fSH, NOTE_fH, NOTE_fSH, 0,
+
+  
+  NOTE_aS, NOTE_dSH, NOTE_cSH, NOTE_cH, NOTE_b,
+  NOTE_cH, 0,
+
+  
+  NOTE_f, NOTE_gS, NOTE_f, NOTE_cH, NOTE_a,
+  NOTE_f, NOTE_f, NOTE_cH, NOTE_a, 0
+};
+
+int duration[] {
+  500, 500, 500, 350, 150,
+  500, 350, 150, 650, 500,
+   
+  500, 500, 500, 350, 150,
+  500, 350, 150, 650, 500,
+
+  500, 300, 150, 500, 325,
+  175, 125, 125, 250, 325,
+
+  250, 500, 325, 175, 125,
+  125, 250, 350,
+ 
+  250, 500, 350, 125, 500,
+  375, 125, 650, 500,
+
+  500, 300, 150, 500, 325,
+  175, 125, 125, 250, 325,
+
+  250, 500, 325, 175, 125,
+  125, 250, 350,
+
+  250, 500, 375, 125, 500,
+  375, 125, 650, 650 
+};
+
+// ===== Sniffer function ===== //
+void sniffer(uint8_t *buf, uint16_t len) {
+  if (!buf || len < 28) return; // Drop packets without MAC header
+
+  byte pkt_type = buf[12]; // second half of frame control field
+  //byte* addr_a = &buf[16]; // first MAC address
+  //byte* addr_b = &buf[22]; // second MAC address
+
+  // If captured packet is a deauthentication or dissassociaten frame
+  if (pkt_type == 0xA0 || pkt_type == 0xC0) {
+    ++packet_rate;
+  }
+}
+
+// ===== Attack detection functions ===== //
+void attack_started() {
+  song_playing = true;
+  note_index = 0;
+  note_time = duration[note_index] * SPEED;
+
+  for(int i=0; i<LED_NUM; ++i)
+    pixels.setPixelColor(i, pixels.Color(120,0,0));
+  pixels.show();
+
+  Serial.println("ATTACK DETECTED");
+}
+
+void attack_stopped() {
+  song_playing = false;
+  noTone(BUZZER); // Stop playing
+
+  for(int i=0; i<LED_NUM; ++i)
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
+  pixels.show();
+
+  Serial.println("ATTACK STOPPED");
+}
+
+// ===== Setup ===== //
+void setup() {
+  Serial.begin(SERIAL_BAUD); // Start serial communication
+
+  // Init LEDs
+  pixels.begin();
+  for(int i=0; i<LED_NUM; ++i)
+    pixels.setPixelColor(i, pixels.Color(0,100,0));
+  pixels.show();
+
+  pinMode(BUZZER, OUTPUT); // Init buzzer pin
+
+  WiFi.disconnect();                   // Disconnect from any saved or active WiFi connections
+  wifi_set_opmode(STATION_MODE);       // Set device to client/station mode
+  wifi_set_promiscuous_rx_cb(sniffer); // Set sniffer function
+  wifi_set_channel(channels[0]);       // Set channel
+  wifi_promiscuous_enable(true);       // Enable sniffer
+
+  Serial.println("Started \\o/");
+}
+
+// ===== Loop ===== //
+void loop() {
+  unsigned long current_time = millis(); // Get current time (in ms)
+
+  // Update each second (or scan-time-per-channel * channel-range)
+  if (current_time - update_time >= (sizeof(channels)*CH_TIME)) {
+    update_time = current_time; // Update time variable
+
+    // When detected deauth packets exceed the minimum allowed number
+    if (packet_rate >= PKT_RATE) {
+      ++attack_counter; // Increment attack counter
+    } else {
+      if(attack_counter >= PKT_TIME) attack_stopped();
+      attack_counter = 0; // Reset attack counter
+    }
+
+    // When attack exceeds minimum allowed time
+    if (attack_counter == PKT_TIME) {
+      attack_started();
+    }
+
+    Serial.print("Packets/s: ");
+    Serial.println(packet_rate);
+
+    packet_rate = 0; // Reset packet rate
+  }
+
+  // Channel hopping
+  if (sizeof(channels) > 1 && current_time - ch_time >= CH_TIME) {
+    ch_time = current_time; // Update time variable
+
+    // Get next channel
+    ch_index = (ch_index+1) % (sizeof(channels)/sizeof(channels[0]));
+    short ch = channels[ch_index];
+
+    // Set channel
+    //Serial.print("Set channel to ");
+    //Serial.println(ch);
+    wifi_set_channel(ch);
+  }
+
+  if(song_playing && current_time - song_time >= note_time) {
+    song_time = current_time;
+
+    note_index = (note_index+1) % (sizeof(notes)/sizeof(notes[0]));
+    note_time = duration[note_index] * SPEED;
+
+    tone(BUZZER, notes[note_index], note_time);
+  }
+
+}

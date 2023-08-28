@@ -124,6 +124,9 @@ void loop() {
     display.println(" /sec");
     display.println("--------------------");
 
+    // sending the finalised data to the OLED IC2 Display
+    display.display();
+
     packet_rate = 0; // Reset packet rate
   }
 
@@ -140,8 +143,5 @@ void loop() {
     //Serial.println(ch);
     wifi_set_channel(ch);
   }
-
-  // sending the finalised data to the OLED IC2 Display
-  display.display();
 
 }

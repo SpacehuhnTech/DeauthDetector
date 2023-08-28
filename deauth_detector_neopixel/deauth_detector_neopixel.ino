@@ -38,7 +38,7 @@ void sniffer(uint8_t *buf, uint16_t len) {
   //byte* addr_a = &buf[16]; // first MAC address
   //byte* addr_b = &buf[22]; // second MAC address
 
-  // If captured packet is a deauthentication or dissassociaten frame
+  // If captured packet is a deauthentication or disassociation frame
   if (pkt_type == 0xA0 || pkt_type == 0xC0) {
     ++packet_rate;
   }
